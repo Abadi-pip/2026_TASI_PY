@@ -630,7 +630,9 @@ if news_items:
     news_html += '</div>'
     st.markdown(news_html, unsafe_allow_html=True)
 else:
-    st.info(st.checkbox('لا تتوفر أخبار حالياً لهذا السهم هل ترغب في عرض اخبار الاسهم السعودية.'))
+    st.info('لا تتوفر أخبار حالياً لهذا السهم.')
+#    st.info(st.checkbox('لا تتوفر أخبار حالياً لهذا السهم هل ترغب في عرض اخبار الاسهم السعودية.'))
+
 
 #========================= Trending world News via RSS Feed ==========================
 
