@@ -516,13 +516,13 @@ if len(drop) > 0:
                                 marker=dict(symbol='triangle-down', size=14, color='#E15361'), 
                                 name='إشارة بيع'
                             ), row=1, col=1)
-                            #Stochastic
-                        # df['14-high'] = df['High'].rolling(14).max()
-                        # df['14-low'] = df['Low'].rolling(14).min()
-                        # df['%K'] = (df['Close'] - df['14-low']) * 100 / (df['14-high'] - df['14-low'])
-                        # df['%D'] = df['%K'].rolling(3).mean()
-                        # fig1.add_trace(go.Scatter(x=df['Date'], y=df['%K'], marker_color='blue', name='%K'), row=3, col=1)
-                        # fig1.add_trace(go.Scatter(x=df['Date'], y=df['%D'], marker_color='red', name='%D'), row=3, col=1)
+                    if st.toggle('حركة البيع و الشراء(Stochastic)'):       #Stochastic
+                        df['14-high'] = df['High'].rolling(14).max()
+                        df['14-low'] = df['Low'].rolling(14).min()
+                        df['%K'] = (df['Close'] - df['14-low']) * 100 / (df['14-high'] - df['14-low'])
+                        df['%D'] = df['%K'].rolling(3).mean()
+                        fig1.add_trace(go.Scatter(x=df['Date'], y=df['%K'], marker_color='blue', name='%K'), row=3, col=1)
+                        fig1.add_trace(go.Scatter(x=df['Date'], y=df['%D'], marker_color='red', name='%D'), row=3, col=1)
                 st.form_submit_button(label='تنفيذ')
         
         if st.checkbox('توقعات السهم'):
