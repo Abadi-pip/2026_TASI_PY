@@ -401,7 +401,7 @@ if len(drop) > 0:
         if 'Volume' in df.columns:
             df = df[df['Volume'] != 0]
 
-        fig1=make_subplots(rows=5, cols=1, shared_xaxes=True, vertical_spacing=0.03, subplot_titles=(f'{drop}', 'حجم التداول'), row_width=[1,1,3,3])
+        fig1=make_subplots(rows=5, cols=1, shared_xaxes=True, vertical_spacing=0.03, subplot_titles=(f'{drop}', 'حجم التداول'), row_width=[1,1,1,3,3])
         
         # التأكد من استخراج البيانات أحادية الأبعاد للرسم
         open_data = df['Open'].squeeze()
