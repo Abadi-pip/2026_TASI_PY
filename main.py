@@ -629,6 +629,8 @@ if news_items:
                           f'<span class="tasi-news-arrow">\u2039</span></div></a>')
     news_html += '</div>'
     st.markdown(news_html, unsafe_allow_html=True)
+elif drop == 'المؤشر العام':
+    st.info('أختر من القائمة الجانبية السهم لعرض أخباره') 
 else:
     st.info('لا تتوفر أخبار حالياً لهذا السهم.')
 #    st.info(st.checkbox('لا تتوفر أخبار حالياً لهذا السهم هل ترغب في عرض اخبار الاسهم السعودية.'))
