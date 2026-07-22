@@ -184,7 +184,33 @@ st.caption(date)
 "---"
 
 #========================= DICTIONARIES ================================
-Section_list = ['المؤشر العام','قطاع الطاقة','قطاع المواد الأساسية','قطاع السلع الرأسمالية' ,
+#=========================  Commodities ================================
+Section_list1 = ['الذهب', 'الفضة', 'البلاتين', 'النحاس', 'النفط الخام', 'الغاز الطبيعي']
+
+Gold = {'العقود الآجلة للذهب (كومكس)': 'GC=F', 
+    'الذهب الفوري (عالمي)': 'XAU=X'
+}
+
+Silver = {'العقود الآجلة للفضة (كومكس)': 'SI=F', 
+    'الفضة الفورية (عالمي)': 'XAG=X'
+}
+
+Platinum = {'العقود الآجلة للبلاتين (نايمكس)': 'PL=F', 
+    'البلاتين الفوري': 'XPT=X'
+}
+
+Copper = {'العقود الآجلة للنحاس': 'HG=F'
+}
+
+Crude_Oil = {'النفط الخام الأمريكي (WTI)': 'CL=F', 
+    'نفط خام برنت (Brent)': 'BZ=F'
+}
+
+Natural_Gas = {'الغاز الطبيعي': 'NG=F'
+}
+
+#========================  TASI & SECTORS ================================
+Section_list = ['المؤشر العام TASI','قطاع الطاقة','قطاع المواد الأساسية','قطاع السلع الرأسمالية' ,
                 'قطاع الخدمات التجارية والمهنية', 'قطاع النقل' ,
                 'قطاع السلع طويلة الاجل' , 'قطاع الخدمات الإستهلاكية', 'قطاع الإعلام والترفيه',
                 'قطاع تجزئة السلع الكمالية' , 'قطاع تجزئة الأغذية', 
@@ -192,7 +218,7 @@ Section_list = ['المؤشر العام','قطاع الطاقة','قطاع ال
                 'قطاع البنوك','قطاع الإستثمار والتمويل',  'قطاع التأمين','قطاع التطبيقات وخدمات التقنية',
                  'قطاع الإتصالات' , 'قطاع المرافق العامة', 'الصناديق العقارية المتداولة (ريت)', 'إدارة وتطوير العقارات']
 
-TASI = {'المؤشر العام':'^TASI.SR'}
+TASI = {'المؤشر العام TASI':'^TASI.SR'}
 
 Energy = {'شركة المصافي العربية السعودية': '2030.SR', 'أرامكو السعودية': '2222.SR', 'شركة رابغ للتكرير والبتروكيماويات(بترو رابغ)': '2380.SR', 'الحفر العربية': '2381.SR', 'أديس' : '2382.SR', 'الشركة الوطنية السعودية للنقل البحري': '4030.SR', 'شركة الدريس للخدمات البترولية والنقليات': '4200.SR'}
 
@@ -236,17 +262,22 @@ REITs= {'الرياض ريت' : '4330.SR', 'الجزيرة ريت' : '4331.SR', 
 
 Real_Estate_Mgmt_Devt = {'الشركة العقارية السعودية': '4020.SR', 'شركة طيبة القابضة': '4090.SR', 'شركة مكة للإنشاء والتعمير': '4100.SR', 'شركة الرياض للتعمير': '4150.SR', 'إعمار المدينة الاقتصادية': '4220.SR', 'شركة البحر الأحمر العالمية': '4230.SR', 'شركة جبل عمر للتطوير': '4250.SR', 'شركة دار الأركان للتطوير العقاري': '4300.SR', 'مدينة المعرفة الاقتصادية': '4310.SR', 'الأندلس' : '4320.SR', '(سينومي سنترز) شركة المراكز العربية' : '4321.SR', 'شركة رتال للتطوير العمراني' : '4322.SR', 'شركة سمو العقارية' : '4323.SR'} 
 
+# ========================= SIDEBAR ===========================================
 my_stock = {key:val for (key, val) in TASI.items()}
 
-# ========================= SIDEBAR ===========================================
+
 with st.sidebar:
     st.markdown(f'''<div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;">
     <div style="width:32px;height:32px;border-radius:8px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:16px;">{Page_icon}</div>
     <div><div style="color:var(--text-primary);font-size:13.5px;font-weight:500;">{page_title}</div>
     <div style="color:var(--text-muted);font-size:11px;">مؤشر تداول TASI</div></div></div>''', unsafe_allow_html=True)
 
+    section_1 = st.selectbox('أختر نوع البيانات', ['الأسهم السعودية', 'السلع العالمية'], index=0)
+    if section_1 == 'الأسهم السعودية': Section_list = Section_list
+    if section_1 == 'السلع العالمية': Section_list = Section_list1 
+    
     Section = st.selectbox('أختر القطاع', Section_list)
-    if Section == 'المؤشر العام': my_stock = my_stock
+    if Section == 'المؤشر العام TASI': my_stock = my_stock
     if Section == 'قطاع الطاقة': my_stock = Energy
     if Section == 'قطاع المواد الأساسية' : my_stock = Materials
     if Section == 'قطاع السلع الرأسمالية': my_stock = Capital_Goods
@@ -268,6 +299,12 @@ with st.sidebar:
     if Section == 'قطاع المرافق العامة': my_stock = Utilities
     if Section == 'الصناديق العقارية المتداولة (ريت)': my_stock = REITs
     if Section == 'إدارة وتطوير العقارات': my_stock = Real_Estate_Mgmt_Devt
+    if Section == 'الذهب': my_stock = Gold
+    if Section == 'الفضة': my_stock = Silver
+    if Section == 'البلاتين': my_stock = Platinum
+    if Section == 'النحاس': my_stock = Copper
+    if Section == 'النفط الخام': my_stock = Crude_Oil
+    if Section == 'الغاز الطبيعي': my_stock = Natural_Gas
 
     drop = st.selectbox('أختر السهم', list(my_stock.keys()))
     start = st.date_input('بداية المدة : اختر التاريخ', value = pd.to_datetime('2022-11-06'))
@@ -415,6 +452,12 @@ if len(drop) > 0:
         if vol_data is not None:
             fig1.add_trace(go.Bar(x=df['Date'], y=vol_data, marker_color='#1FAE7A', showlegend=False), row=2, col=1)
 
+        if Section in Section_list1:
+            market_rangebreaks = [dict(bounds=["sat", "mon"])]
+        else:
+            # السوق السعودي: الإجازة هي الجمعة والسبت
+            market_rangebreaks = [dict(bounds=["fri", "sun"])]
+            
         fig1.update_layout(height=900, template='plotly_dark', paper_bgcolor='#161F35', plot_bgcolor='#161F35', font=dict(color='#EDEFF4', family='Tajawal'))
         fig1.update_yaxes(tickfont=dict(size=15))
         fig1.update_layout(
@@ -430,7 +473,7 @@ if len(drop) > 0:
                         ),
                         rangeslider=dict(visible=False), # تم إيقاف الشريط السفلي لمنع التعارض
                         type="date",
-                        rangebreaks=[dict(bounds=["fri", "sun"])] # إخفاء الجمعة والسبت بنجاح
+                        rangebreaks=market_rangebreaks 
                     )
                 )        
         with st.expander('التـحـليـل الفنــــــي'):
@@ -453,6 +496,26 @@ if len(drop) > 0:
                         fig1.add_trace(go.Scatter(x=df['Date'], y=df['SMA'], marker_color='rgb(106, 106, 106)', name='SMA'), row=1, col=1)
                         fig1.add_trace(go.Scatter(x=df['Date'], y=df['Upper'], marker_color='rgb(52, 108, 154)', name='stddev_UP'), row=1, col=1)
                         fig1.add_trace(go.Scatter(x=df['Date'], y=df['Lower'], marker_color='rgb(52, 108, 154)', fill='tonexty', name='stddev_LO'), row=1, col=1)
+                    
+                    if st.toggle('Ichimoku - إيشيموكو'):
+                        # 1. حساب الخطوط الأساسية
+                        df['tenkan_sen'] = (df['High'].rolling(window=9).max() + df['Low'].rolling(window=9).min()) / 2
+                        df['kijun_sen'] = (df['High'].rolling(window=26).max() + df['Low'].rolling(window=26).min()) / 2
+                        df['senkou_span_a'] = ((df['tenkan_sen'] + df['kijun_sen']) / 2).shift(26)
+                        df['senkou_span_b'] = ((df['High'].rolling(window=52).max() + df['Low'].rolling(window=52).min()) / 2).shift(26)
+                        df['bull_kumo'] = np.where(df['senkou_span_a'] > df['senkou_span_b'], df['senkou_span_a'], df['senkou_span_b'])
+                        df['bear_kumo'] = np.where(df['senkou_span_a'] < df['senkou_span_b'], df['senkou_span_a'], df['senkou_span_b'])
+
+                        fig1.add_trace(go.Scatter(x=df['Date'], y=df['senkou_span_b'], mode='lines', line=dict(width=0), showlegend=False, hoverinfo='skip'), row=1, col=1)
+                        fig1.add_trace(go.Scatter(x=df['Date'], y=df['bull_kumo'], mode='lines', line=dict(width=0), fill='tonexty', fillcolor='rgba(31, 174, 122, 0.3)', showlegend=False, hoverinfo='skip'), row=1, col=1)
+                        fig1.add_trace(go.Scatter(x=df['Date'], y=df['senkou_span_b'], mode='lines', line=dict(width=0), showlegend=False, hoverinfo='skip'), row=1, col=1)
+                        fig1.add_trace(go.Scatter(x=df['Date'], y=df['bear_kumo'], mode='lines', line=dict(width=0), fill='tonexty', fillcolor='rgba(225, 83, 97, 0.3)', showlegend=False, hoverinfo='skip'), row=1, col=1)
+
+                        fig1.add_trace(go.Scatter(x=df['Date'], y=df['tenkan_sen'], line=dict(color='blue', width=1.5), name='Tenkan-sen (9)'), row=1, col=1)
+                        fig1.add_trace(go.Scatter(x=df['Date'], y=df['kijun_sen'], line=dict(color='orange', width=1.5), name='Kijun-sen (26)'), row=1, col=1)
+                        fig1.add_trace(go.Scatter(x=df['Date'], y=df['senkou_span_a'], line=dict(color='#1FAE7A', width=1), name='Senkou Span A'), row=1, col=1)
+                        fig1.add_trace(go.Scatter(x=df['Date'], y=df['senkou_span_b'], line=dict(color='#E15361', width=1), name='Senkou Span B'), row=1, col=1)
+
 
                     if st.toggle(' مؤشر الماك دي - MACD'):
                         df['EMA12'] = close_data.ewm(span=12).mean()
@@ -543,7 +606,7 @@ if len(drop) > 0:
 #======= التبويبات المالية الإضافية =========
 st.subheader(f'بيانات مالية إضافية لـ: {drop}')
 
-if drop == 'المؤشر العام':
+if drop == 'المؤشر العام TASI':
     st.info("اختر الشركة من القائمة لعرض بياناتها المالية")
 else:
     ticker = yf.Ticker(my_stock[f'{drop}'])
@@ -629,7 +692,7 @@ if news_items:
                           f'<span class="tasi-news-arrow">\u2039</span></div></a>')
     news_html += '</div>'
     st.markdown(news_html, unsafe_allow_html=True)
-elif drop == 'المؤشر العام':
+elif drop == 'المؤشر العام TASI':
     st.info('أختر من القائمة الجانبية السهم لعرض أخباره') 
 else:
     st.info('لا تتوفر أخبار حالياً لهذا السهم.')
@@ -661,7 +724,7 @@ def trending_news_rss(rss_url, limit=3):
 
 # عرض الأخبار
 url = "https://news.google.com/rss?hl=ar&gl=SA&ceid=SA:ar"
-if drop != 'المؤشر العام':
+if drop != 'المؤشر العام TASI':
     trending_news_rss(url)
 
 
