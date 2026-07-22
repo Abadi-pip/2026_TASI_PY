@@ -448,7 +448,11 @@ if len(drop) > 0:
         if 'Volume' in df.columns:
             df = df[df['Volume'] != 0]
 
+<<<<<<< HEAD
         fig1=make_subplots(rows=5, cols=1, shared_xaxes=True, vertical_spacing=0.01, subplot_titles=(f'{drop}', 'حجم التداول'), row_width=[1,1,1,3,4])
+=======
+        fig1=make_subplots(rows=5, cols=1, shared_xaxes=True, vertical_spacing=0.03, subplot_titles=(f'{drop}', 'حجم التداول'), row_width=[1,1,1,3,3])
+>>>>>>> f192e0cac20ca0ed636d840ef021a04d144fcf23
         
         # التأكد من استخراج البيانات أحادية الأبعاد للرسم
         open_data = df['Open'].squeeze()
@@ -595,6 +599,7 @@ if len(drop) > 0:
                                 name='إشارة بيع'
                             ), row=1, col=1)
                     if st.toggle('حركة البيع و الشراء(Stochastic)'):       #Stochastic
+<<<<<<< HEAD
                         # تطبيق الحل على القمة والقاع
                         df['14-high'] = df['High'].rolling(window=14, min_periods=1).max()
                         df['14-low'] = df['Low'].rolling(window=14, min_periods=1).min()
@@ -603,6 +608,14 @@ if len(drop) > 0:
                         fig1.add_trace(go.Scatter(x=df['Date'], y=df['%K'], marker_color='blue', name='%K'), row=5, col=1)
                         fig1.add_trace(go.Scatter(x=df['Date'], y=df['%D'], marker_color='red', name='%D'), row=5, col=1)
 
+=======
+                        df['14-high'] = df['High'].rolling(14).max()
+                        df['14-low'] = df['Low'].rolling(14).min()
+                        df['%K'] = (df['Close'] - df['14-low']) * 100 / (df['14-high'] - df['14-low'])
+                        df['%D'] = df['%K'].rolling(3).mean()
+                        fig1.add_trace(go.Scatter(x=df['Date'], y=df['%K'], marker_color='blue', name='%K'), row=5, col=1)
+                        fig1.add_trace(go.Scatter(x=df['Date'], y=df['%D'], marker_color='red', name='%D'), row=5, col=1)
+>>>>>>> f192e0cac20ca0ed636d840ef021a04d144fcf23
                 st.form_submit_button(label='تنفيذ')
 
         if st.checkbox('توقعات السهم'):

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 attrs==25.4.0
 autocommand==2.2.2
 Automat==25.4.16
@@ -68,3 +69,12 @@ wadllib==2.0.0
 wheel==0.46.3
 zipp==3.23.0
 zope.interface==8.2
+=======
+numpy
+pandas
+streamlit
+yfinance
+plotly
+prophet
+requests
+>>>>>>> f192e0cac20ca0ed636d840ef021a04d144fcf23
