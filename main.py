@@ -136,9 +136,9 @@ st.markdown(CUSTOM_THEME, unsafe_allow_html=True)
 #======= HERO =========
 st.markdown(f"""
 <div class="tasi-hero">
-    <span class="tasi-hero-badge">TASI · تحديث لحظي</span>
+    <span class="tasi-hero-badge">و اسواق السلع العالمي TASI · تحديث لحظي</span>
     <div class="tasi-hero-title">{page_title} {Page_icon}</div>
-    <div class="tasi-hero-sub">تحليل فني وتوقعات لأسهم السوق السعودي -- بأسلوب واضح وهادئ</div>
+    <div class="tasi-hero-sub">تحليل فني وتوقعات لأسهم السوق السعودي و اسواق السلع العالمي -- بأسلوب واضح وهادئ</div>
 </div>
 <div style="height:60px; background:linear-gradient(var(--hero-blue-2), var(--bg-app)); margin-top:0px; margin-bottom:15px; border-radius: 0 0 16px 16px;"></div>
 """, unsafe_allow_html=True)
@@ -372,7 +372,13 @@ if len(drop) > 0:
     last_price = Y['Close'].iloc[-1]
     # في حال رجعت بيانات السعر كـ Series بدلاً من رقم (مشكلة شائعة في yfinance مؤخراً)
     if isinstance(last_price, pd.Series): last_price = last_price.iloc[0]
-    
+
+    def currenc_convert():
+        if Section_list == Section_list1:
+            return "USD"
+        else:
+            return "ر.س"
+
     R = round(float(last_price), 2)
     Y['price_change'] = Y['Close'].pct_change()
     valid_changes = Y['price_change'].dropna()
@@ -385,13 +391,17 @@ if len(drop) > 0:
     delta_color = "normal"  # الافتراضي (الرمادي)
     if R1 > 0: delta_color = "normal" # الأخضر في Streamlit هو Normal للأسهم
     elif R1 < 0: delta_color = "inverse" # الأحمر
-    
-    st.metric(
-        label=f"آخر سعر إغلاق لـ {drop}",
-        value=f"{R} ر.س",
-        delta=f"{R2}",
-        delta_color=delta_color
-    )
+
+    def currenc_convert_rate():
+        if Section_list == Section_list1:
+            return R*3.75 
+
+    if Section_list == Section_list1:
+        a, b = st.columns(2)
+        a.metric(label=f"آخر سعر إغلاق لـ {drop}", value=f"{R:.2f} {currenc_convert()}",delta=f"{R2}", delta_color=delta_color)
+        b.metric(label=f"آخر سعر إغلاق لـ {drop}", value=f"{currenc_convert_rate():.2f} ر.س ",delta=f"{R2}", delta_color=delta_color)
+    else:
+        st.metric( label=f"آخر سعر إغلاق لـ {drop}", value=f"{R:.2f} {currenc_convert()}", delta=f"{R2}", delta_color=delta_color)
 
     plot_chart = Y.drop(['Adj Close', 'Volume', 'price_change', 'Date'], axis=1, errors='ignore')
     st.subheader(f'  الرسم البياني لــ: {drop}' )
@@ -438,7 +448,7 @@ if len(drop) > 0:
         if 'Volume' in df.columns:
             df = df[df['Volume'] != 0]
 
-        fig1=make_subplots(rows=5, cols=1, shared_xaxes=True, vertical_spacing=0.03, subplot_titles=(f'{drop}', 'حجم التداول'), row_width=[1,1,1,3,3])
+        fig1=make_subplots(rows=5, cols=1, shared_xaxes=True, vertical_spacing=0.01, subplot_titles=(f'{drop}', 'حجم التداول'), row_width=[1,1,1,3,4])
         
         # التأكد من استخراج البيانات أحادية الأبعاد للرسم
         open_data = df['Open'].squeeze()
@@ -489,20 +499,20 @@ if len(drop) > 0:
                         fig1.add_trace(go.Scatter(x=df['Date'], y=df['MA50'], marker_color='rgb(160, 131, 40)', name='MA50'), row=1, col=1)
 
                     if st.toggle('مؤشر بولينجر باند'):
-                        df['SMA'] = close_data.rolling(window=20).mean()
-                        df['stddev'] = close_data.rolling(window=20).std()
+                        df['SMA'] = close_data.rolling(window=20, min_periods=1).mean()
+                        df['stddev'] = close_data.rolling(window=20, min_periods=1).std()
                         df['Upper'] = df.SMA + 2 * df.stddev
                         df['Lower'] = df.SMA - 2 * df.stddev
                         fig1.add_trace(go.Scatter(x=df['Date'], y=df['SMA'], marker_color='rgb(106, 106, 106)', name='SMA'), row=1, col=1)
                         fig1.add_trace(go.Scatter(x=df['Date'], y=df['Upper'], marker_color='rgb(52, 108, 154)', name='stddev_UP'), row=1, col=1)
-                        fig1.add_trace(go.Scatter(x=df['Date'], y=df['Lower'], marker_color='rgb(52, 108, 154)', fill='tonexty', name='stddev_LO'), row=1, col=1)
+                        fig1.add_trace(go.Scatter(x=df['Date'], y=df['Lower'], marker_color='rgb(52, 108, 154)', fill='tonexty', fillcolor='rgba(31, 174, 122, 0.1)', name='stddev_LO'), row=1, col=1)
                     
                     if st.toggle('Ichimoku - إيشيموكو'):
                         # 1. حساب الخطوط الأساسية
-                        df['tenkan_sen'] = (df['High'].rolling(window=9).max() + df['Low'].rolling(window=9).min()) / 2
-                        df['kijun_sen'] = (df['High'].rolling(window=26).max() + df['Low'].rolling(window=26).min()) / 2
+                        df['tenkan_sen'] = (df['High'].rolling(window=9, min_periods=1).max() + df['Low'].rolling(window=9, min_periods=1).min()) / 2
+                        df['kijun_sen'] = (df['High'].rolling(window=26, min_periods=1).max() + df['Low'].rolling(window=26, min_periods=1).min()) / 2
                         df['senkou_span_a'] = ((df['tenkan_sen'] + df['kijun_sen']) / 2).shift(26)
-                        df['senkou_span_b'] = ((df['High'].rolling(window=52).max() + df['Low'].rolling(window=52).min()) / 2).shift(26)
+                        df['senkou_span_b'] = ((df['High'].rolling(window=52, min_periods=1).max() + df['Low'].rolling(window=52, min_periods=1).min()) / 2).shift(26)
                         df['bull_kumo'] = np.where(df['senkou_span_a'] > df['senkou_span_b'], df['senkou_span_a'], df['senkou_span_b'])
                         df['bear_kumo'] = np.where(df['senkou_span_a'] < df['senkou_span_b'], df['senkou_span_a'], df['senkou_span_b'])
 
@@ -518,10 +528,10 @@ if len(drop) > 0:
 
 
                     if st.toggle(' مؤشر الماك دي - MACD'):
-                        df['EMA12'] = close_data.ewm(span=12).mean()
-                        df['EMA26'] = close_data.ewm(span=26).mean()
+                        df['EMA12'] = close_data.ewm(span=12, min_periods=1).mean()
+                        df['EMA26'] = close_data.ewm(span=26, min_periods=1).mean()
                         df['MACD'] = df.EMA12 - df.EMA26
-                        df['signal'] = df.MACD.ewm(span=9).mean()
+                        df['signal'] = df.MACD.ewm(span=9, min_periods=1).mean()
                         df['hist'] =  df['MACD'] - df['signal']
                         colors = np.array(['green' if x>0 else 'red' for x in df['hist']])
                         fig1.add_trace(go.Bar(x=df.Date, y=df['hist'], name='Histogram', marker=dict(color=colors)), row=4, col=1)
@@ -546,6 +556,11 @@ if len(drop) > 0:
                         df['RS'] = df['avg Up'] / df['avg Down']
                         df['RSI'] = df['RS'].apply(lambda x: 100 - (100 / (x + 1)))
                         fig1.add_trace(go.Scatter(x=df['Date'], y=df['RSI'], marker_color='blue', name='RSI'), row=3, col=1)
+
+                    if st.toggle('lagging span - إيشيموكو'):
+                        df['lagging_span'] = close_data.shift(-26)
+                        fig1.add_trace(go.Scatter(x=df['Date'], y=df['lagging_span'], line=dict(color='purple', width=1.5), name='Lagging Span'), row=1, col=1)
+
                     if st.toggle('إشارات البيع والشراء'):
                         # حماية: حساب خطوط البولينجر في الخلفية إذا لم يقم المستخدم بتفعيلها من الزر الآخر
                         if 'Lower' not in df.columns or 'Upper' not in df.columns:
@@ -580,14 +595,16 @@ if len(drop) > 0:
                                 name='إشارة بيع'
                             ), row=1, col=1)
                     if st.toggle('حركة البيع و الشراء(Stochastic)'):       #Stochastic
-                        df['14-high'] = df['High'].rolling(14).max()
-                        df['14-low'] = df['Low'].rolling(14).min()
+                        # تطبيق الحل على القمة والقاع
+                        df['14-high'] = df['High'].rolling(window=14, min_periods=1).max()
+                        df['14-low'] = df['Low'].rolling(window=14, min_periods=1).min()
                         df['%K'] = (df['Close'] - df['14-low']) * 100 / (df['14-high'] - df['14-low'])
-                        df['%D'] = df['%K'].rolling(3).mean()
+                        df['%D'] = df['%K'].rolling(window=3, min_periods=1).mean()
                         fig1.add_trace(go.Scatter(x=df['Date'], y=df['%K'], marker_color='blue', name='%K'), row=5, col=1)
                         fig1.add_trace(go.Scatter(x=df['Date'], y=df['%D'], marker_color='red', name='%D'), row=5, col=1)
+
                 st.form_submit_button(label='تنفيذ')
-        
+
         if st.checkbox('توقعات السهم'):
             df_train = df[['Date', 'Close']].copy()
             # التأكد من استخراج العمود كسلسلة بسيطة للموديل
