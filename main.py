@@ -733,7 +733,7 @@ def trending_news_rss(rss_url, limit=3):
             st.markdown(f"""
             <div style="background-color: var(--bg-card); padding: 15px; border-radius: 10px; border-left: 4px solid var(--gold); margin-bottom: 10px;">
                 <p style="font-weight: bold; color: var(--gold); margin-bottom: 5px;">{i}. {title}</p>
-                <a href="{link}" target="_blank" style="color: var(--hero-accent); text-decoration: none; font-size: 0.9em;">قراءة المزيد ↤</a>
+                <a href="{link}" target="_blank" style="color: var(--hero-accent); text-decoration: dotted; font-size: 0.9em;">قراءة المزيد ↤</a>
             </div>
             """, unsafe_allow_html=True)
     except Exception as e:
