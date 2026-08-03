@@ -86,7 +86,7 @@ hr{ border-color: var(--border-soft) !important; }
 # }
 @keyframes tasiScroll{ from{ transform: translateX(-100%);} to{ transform: translateX(0);} } 
 /* News Items */
-.tasi-news-item{ display:flex; align-items:center; justify-content:space-between; padding:9px 6px; border-bottom:1px solid var(--border-soft2); transition: background .15s ease; }
+.tasi-news-item{ display:flex; align-items:center; justify-content:space-between; padding:9px 6px; border-bottom:1px double var(--border-soft2); transition: background .15s ease; }
 .tasi-news-item:hover{ background: rgba(255,255,255,0.04); }
 .tasi-news-item:hover .tasi-news-arrow{ color: var(--gold); transform: translateX(-3px); }
 .tasi-news-arrow{ color: var(--text-muted); transition: all .15s ease; display:inline-block; }
@@ -704,7 +704,7 @@ if news_items:
         link = (content.get('canonicalUrl', {}) or {}).get('url') or item.get('link', '#')
         if headline:
             safe_headline = html.escape(headline)
-            news_html += (f'<a href="{link}" target="_blank" style="text-decoration:dashed;">'
+            news_html += (f'<a href="{link}" target="_blank" style="text-decoration:none;">'
                           f'<div class="tasi-news-item"><span style="color:var(--text-primary);font-size:14.5px;">{safe_headline}</span>'
                           f'<span class="tasi-news-arrow">\u2039</span></div></a>')
     news_html += '</div>'
