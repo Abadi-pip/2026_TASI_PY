@@ -704,7 +704,7 @@ if news_items:
         link = (content.get('canonicalUrl', {}) or {}).get('url') or item.get('link', '#')
         if headline:
             safe_headline = html.escape(headline)
-            news_html += (f'<a href="{link}" target="_blank" style="text-decoration:none;">'
+            news_html += (f'<a href="{link}" target="_blank" style="text-decoration:dashed;">'
                           f'<div class="tasi-news-item"><span style="color:var(--text-primary);font-size:14.5px;">{safe_headline}</span>'
                           f'<span class="tasi-news-arrow">\u2039</span></div></a>')
     news_html += '</div>'
