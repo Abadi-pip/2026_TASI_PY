@@ -86,7 +86,7 @@ hr{ border-color: var(--border-soft) !important; }
 # }
 @keyframes tasiScroll{ from{ transform: translateX(-100%);} to{ transform: translateX(0);} } 
 /* News Items */
-.tasi-news-item{ display:flex; align-items:center; justify-content:space-between; padding:9px 6px; border-bottom:1px double var(--border-soft2); transition: background .15s ease; }
+.tasi-news-item{ display:flex; align-items:center; justify-content:space-between; padding:9px 6px; border-bottom:1px solid var(--border-soft2); transition: background .15s ease; }
 .tasi-news-item:hover{ background: rgba(255,255,255,0.04); }
 .tasi-news-item:hover .tasi-news-arrow{ color: var(--gold); transform: translateX(-3px); }
 .tasi-news-arrow{ color: var(--text-muted); transition: all .15s ease; display:inline-block; }
