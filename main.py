@@ -367,13 +367,7 @@ if len(drop) > 0:
                 Y.style.format(format_dict).to_excel(writer, sheet_name='Stock Data')
             st.download_button(label="📊 تحميل البيانات كـ Excel", data=buffer_excel.getvalue(), file_name=f'TasiStock-{drop}.xlsx', mime="application/vnd.ms-excel")
 
-    st.divider()
-    if st.checkbox('فديو شرح ايشيموكو'):
-        st.markdown('''
-        <iframe width="894" height="503" src="https://www.youtube.com/embed/KE_SAzserLE" title="Complete Ichimoku Cloud Trading Strategy - Simply Explained" frameborder="0" allow="accelerometer;
-        autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;
-        web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        ''', unsafe_allow_html=True)
+    
 
     st.divider()
     valid_closes = Y['Close'].dropna()
@@ -414,6 +408,13 @@ if len(drop) > 0:
     plot_chart = Y.drop(['Adj Close', 'Volume', 'price_change', 'Date'], axis=1, errors='ignore')
     st.subheader(f'  الرسم البياني لــ: {drop}' )
     plot_ = st.radio(label='***اختر نوع الرسم البياني***', options=('(يــومي)خط بياني','(يــومي)شموع'))
+st.divider()
+if st.checkbox('فديو شرح ايشيموكو'):
+    st.markdown('''
+    <iframe width="894" height="503" src="https://www.youtube.com/embed/KE_SAzserLE" title="Complete Ichimoku Cloud Trading Strategy - Simply Explained" frameborder="0" allow="accelerometer;
+    autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;
+    web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    ''', unsafe_allow_html=True)
 
     if plot_ == '(يــومي)خط بياني':  #===== PLOTING THE LINE CHART =============
         fign = px.line(plot_chart)
