@@ -367,6 +367,8 @@ if len(drop) > 0:
                 Y.style.format(format_dict).to_excel(writer, sheet_name='Stock Data')
             st.download_button(label="📊 تحميل البيانات كـ Excel", data=buffer_excel.getvalue(), file_name=f'TasiStock-{drop}.xlsx', mime="application/vnd.ms-excel")
 
+    
+
     st.divider()
     valid_closes = Y['Close'].dropna()
     last_price = Y['Close'].iloc[-1]
@@ -391,7 +393,7 @@ if len(drop) > 0:
     delta_color = "normal"  # الافتراضي (الرمادي)
     if R1 > 0: delta_color = "normal" # الأخضر في Streamlit هو Normal للأسهم
     elif R1 < 0: delta_color = "inverse" # الأحمر
-
+    
     def currenc_convert_rate():
         if Section_list == Section_list1:
             return R*3.75 
@@ -416,7 +418,7 @@ if len(drop) > 0:
     
     st.subheader(f'  الرسم البياني لــ: {drop}' )
     plot_ = st.radio(label='***اختر نوع الرسم البياني***', options=('(يــومي)خط بياني','(يــومي)شموع'))
-    
+
     if plot_ == '(يــومي)خط بياني':  #===== PLOTING THE LINE CHART =============
         fign = px.line(plot_chart)
         fign.update_layout(height=600)
