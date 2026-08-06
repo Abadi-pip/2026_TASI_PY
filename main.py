@@ -404,6 +404,16 @@ if len(drop) > 0:
         st.metric( label=f"آخر سعر إغلاق لـ {drop}", value=f"{R:.2f} {currenc_convert()}", delta=f"{R2}", delta_color=delta_color)
 
     plot_chart = Y.drop(['Adj Close', 'Volume', 'price_change', 'Date'], axis=1, errors='ignore')
+
+    st.divider()
+    if st.checkbox('فديو شرح ايشيموكو'):
+        st.markdown('''
+        <iframe width="1250" height="700" src="https://www.youtube.com/embed/KE_SAzserLE" title="Complete Ichimoku Cloud Trading Strategy - Simply Explained" frameborder="0" allow="accelerometer;
+        autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;
+        web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        ''', unsafe_allow_html=True)
+    st.divider()
+    
     st.subheader(f'  الرسم البياني لــ: {drop}' )
     plot_ = st.radio(label='***اختر نوع الرسم البياني***', options=('(يــومي)خط بياني','(يــومي)شموع'))
     
@@ -538,10 +548,19 @@ if len(drop) > 0:
                         fig1.add_trace(go.Scatter(x=df['Date'], y=df['MACD'], marker_color='blue', name='MACD'), row=4, col=1)
                         fig1.add_trace(go.Scatter(x=df['Date'], y=df['signal'], marker_color='red', name='signal'), row=4, col=1)
 
+                    if st.toggle('ATR - متوسط المدى الحقيقي'):
+                        df['H-L'] = df['High'] - df['Low']
+                        df['H-PC'] = abs(df['High'] - df['Close'].shift(1))
+                        df['L-PC'] = abs(df['Low'] - df['Close'].shift(1))
+                        df['TR'] = df[['H-L', 'H-PC', 'L-PC']].max(axis=1)
+                        df['ATR'] = df['TR'].rolling(window=14, min_periods=1).mean()
+                        fig1.add_trace(go.Scatter(x=df['Date'], y=df['ATR'], marker_color='orange', name='ATR'), row=4, col=1)
+
                 with colB:
                     if st.toggle('[MA100]المتوسط المتحرك'):
                         df['MA100']= close_data.rolling(window=100, min_periods=0).mean()
                         fig1.add_trace(go.Scatter(x=df['Date'], y=df['MA100'], marker_color='red', name='MA100'), row=1, col=1)
+
 
                     if st.toggle('[MA200]المتوسط المتحرك'):
                         df['MA200']= close_data.rolling(window=200, min_periods=0).mean()
@@ -705,7 +724,7 @@ if news_items:
         if headline:
             safe_headline = html.escape(headline)
             news_html += (f'<a href="{link}" target="_blank" style="text-decoration:none;">'
-                          f'<div class="tasi-news-item"><span style="color:var(--text-primary);font-size:12.5px;">{safe_headline}</span>'
+                          f'<div class="tasi-news-item"><span style="color:var(--text-primary);font-size:14.5px;">{safe_headline}</span>'
                           f'<span class="tasi-news-arrow">\u2039</span></div></a>')
     news_html += '</div>'
     st.markdown(news_html, unsafe_allow_html=True)
